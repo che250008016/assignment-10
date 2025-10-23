@@ -1,0 +1,72 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+using namespace std;
+
+struct SalesRecord {
+    string month;
+    float amount;
+};
+
+int main() {
+    const int MONTHS = 12;
+    SalesRecord sales[MONTHS];
+
+    
+    cout << "Enter sales data for 12 months:\n";
+    for (int i = 0; i < MONTHS; i++) {
+        cout << "Month: ";
+        getline(cin, sales[i].month);
+        cout << "Sales amount: ";
+        cin >> sales[i].amount;
+        cin.ignore(); 
+    }
+
+    // Write data to file
+    ofstream outFile("sales_data.txt");
+    if (!outFile) {
+        cerr << "Error opening file for writing.\n";
+        return 1;
+    }
+    for (int i = 0; i < MONTHS; i++) {
+        outFile << sales[i].month << " " << sales[i].amount << "\n";
+    }
+    outFile.close();
+
+    // Read data back from file
+    ifstream inFile("sales_data.txt");
+    if (!inFile) {
+        cerr << "Error opening file for reading.\n";
+        return 1;
+    }
+
+    vector<SalesRecord> loadedSales;
+    string month;
+    float amount;
+    while (inFile >> month >> amount) {
+        SalesRecord rec;
+        rec.month = month;
+        rec.amount = amount;
+        loadedSales.push_back(rec);
+    }
+    inFile.close();
+
+    // Calculate yearly average
+    float total = 0.0f;
+    for (const auto& rec : loadedSales) {
+        total += rec.amount;
+    }
+    float average = total / loadedSales.size();
+
+    // Display months with sales above average
+    cout << "\nYearly average sales: " << average << "\n";
+    cout << "Months with sales above yearly average:\n";
+    for (const auto& rec : loadedSales) {
+        if (rec.amount > average) {
+            cout << rec.month << " (" << rec.amount << ")\n";
+        }
+    }
+
+    return 0;
+}
