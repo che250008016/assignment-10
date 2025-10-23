@@ -1,0 +1,50 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct item {
+    int id;
+    string name;
+    float cost;
+};
+
+void desc(item items[], int n) {
+    
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (items[j].cost < items[j + 1].cost) {
+                item temp = items[j];
+                items[j] = items[j + 1];
+                items[j + 1] = temp;
+            }
+        }
+    }
+
+    
+    cout << "\nItems sorted by cost (descending):\n";
+    for (int i = 0; i < n; i++) {
+        cout << "ID: " << items[i].id << endl;
+        cout << "Name: " << items[i].name << endl;
+        cout << "Cost: " << items[i].cost << endl;
+        cout << "-------------------\n";
+    }
+}
+
+int main() {
+    const int n = 8;
+    item items[n];
+
+    for (int i = 0; i < n; i++) {
+        cout << "Enter item " << i + 1 << " (id name cost): ";
+        cin >> items[i].id >> items[i].name >> items[i].cost;
+    }
+float sum = 0;
+for (int i = 0; i < n; i++)
+sum+=items[i].cost;
+float avg = sum/8;
+cout<<"average of cost is :"<<avg;
+
+    desc(items, n);
+
+    return 0;
+}
